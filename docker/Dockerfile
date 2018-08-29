@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y supervisor && \
     git clone --depth 3 $VERSO $HOME/verso
 
 COPY recto/.gitmodules $HOME/recto/.gitmodules
-COPY recto/server.js $HOME/recto/server.js
+COPY recto/local-server.js $HOME/recto/server.js
 RUN cd recto && git submodule init && git submodule update && \
     rm $HOME/recto/bfe/static/js/config-dev.js
 
