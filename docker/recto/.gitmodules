@@ -1,0 +1,6 @@
+[submodule "profile-edit"]
+	path = profile-edit
+	url = https://github.com/lcnetdev/profile-edit.git
+[submodule "bfe"]
+	path = bfe
+	url = https://github.com/ld4p/bfe.git
