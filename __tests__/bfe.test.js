@@ -1,5 +1,5 @@
-const bfe = require("../builds/bfe")
+const bfe = require('../builds/bfe')
 
 test(`bfe can be loaded`, () => {
-
-});
+  expects(bfe)
+})
