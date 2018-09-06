@@ -32,142 +32,6 @@
  * @param module a name for the payload
  * @param payload a function to call with (require, exports, module) params
  */
-(function () {
-  var ACE_NAMESPACE = 'bfe';
-
-  var global = (function () {
-    return this;
-  })();
-
-  if (!ACE_NAMESPACE && typeof requirejs !== 'undefined') { return; }
-
-  var _define = function (module, deps, payload) {
-    if (typeof module !== 'string') {
-      if (_define.original) { _define.original.apply(window, arguments); } else {
-        console.error('dropping module because define wasn\'t a string.');
-        console.trace();
-      }
-      return;
-    }
-
-    if (arguments.length === 2) { payload = deps; }
-
-    if (!_define.modules) {
-      _define.modules = {};
-      _define.payloads = {};
-    }
-
-    _define.payloads[module] = payload;
-    _define.modules[module] = null;
-  };
-
-    /**
-     * Get at functionality define()ed using the function above
-     */
-  var _require = function (parentId, module, callback) {
-    if (Object.prototype.toString.call(module) === '[object Array]') {
-      var params = [];
-      for (var i = 0, l = module.length; i < l; ++i) {
-        var dep = lookup(parentId, module[i]);
-        if (!dep && _require.original) { return _require.original.apply(window, arguments); }
-        params.push(dep);
-      }
-      if (callback) {
-        callback.apply(null, params);
-      }
-    } else if (typeof module === 'string') {
-      var payload = lookup(parentId, module);
-      if (!payload && _require.original) { return _require.original.apply(window, arguments); }
-
-      if (callback) {
-        callback();
-      }
-
-      return payload;
-    } else {
-      if (_require.original) { return _require.original.apply(window, arguments); }
-    }
-  };
-
-  var normalizeModule = function (parentId, moduleName) {
-    // normalize plugin requires
-    if (moduleName.indexOf('!') !== -1) {
-      var chunks = moduleName.split('!');
-      return normalizeModule(parentId, chunks[0]) + '!' + normalizeModule(parentId, chunks[1]);
-    }
-    // normalize relative requires
-    if (moduleName.charAt(0) === '.') {
-      var base = parentId.split('/').slice(0, -1).join('/');
-      moduleName = base + '/' + moduleName;
-
-      while (moduleName.indexOf('.') !== -1 && previous !== moduleName) {
-        var previous = moduleName;
-        moduleName = moduleName.replace(/\/\.\//, '/').replace(/[^\/]+\/\.\.\//, '');
-      }
-    }
-
-    return moduleName;
-  };
-
-    /**
-     * Internal function to lookup moduleNames and resolve them by calling the
-     * definition function if needed.
-     */
-  var lookup = function (parentId, moduleName) {
-    moduleName = normalizeModule(parentId, moduleName);
-    var exports;
-    var module = _define.modules[moduleName];
-    if (!module) {
-      module = _define.payloads[moduleName];
-      if (typeof module === 'function') {
-        exports = {};
-        var mod = {
-          id: moduleName,
-          uri: '',
-          exports: exports,
-          packaged: true
-        };
-
-        var req = function (module, callback) {
-          return _require(moduleName, module, callback);
-        };
-
-        var returnValue = module(req, exports, mod);
-        exports = returnValue || mod.exports;
-        _define.modules[moduleName] = exports;
-        delete _define.payloads[moduleName];
-      }
-      module = _define.modules[moduleName] = exports || module;
-    }
-    return module;
-  };
-
-  function exportAce (ns) {
-    var require = function (module, callback) {
-      return _require('', module, callback);
-    };
-
-    var root = global;
-    if (ns) {
-      if (!global[ns]) { global[ns] = {}; }
-      root = global[ns];
-    }
-
-    if (!root.define || !root.define.packaged) {
-      _define.original = root.define;
-      root.define = _define;
-      root.define.packaged = true;
-    }
-
-    if (!root.require || !root.require.packaged) {
-      _require.original = root.require;
-      root.require = require;
-      root.require.packaged = true;
-    }
-  }
-
-  exportAce(ACE_NAMESPACE);
-})();
 
 bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfelogging', 'src/lib/aceconfig'], function (require, exports, module) {
   var editorconfig = {};
@@ -529,7 +393,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
                   } else {
                     cell.node().innerHTML = '<a href="' + config.basedbURI + '/' + full.objid + '">' + lccn + '</a>';
                   }
-                  
+
                   $(cell.node()).css('background-color', 'lightgreen');
                 } else {
                   if (new Date(new Date(full.modified).getTime() + 60000) > new Date()) {
@@ -748,7 +612,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
             <button id="bfeditor-loaduri" type="button" class="btn btn-primary">Submit URL</button> \
             </form></div>'));
 
-    
+
     var getProfileOptions = function(jqObject) {
       for (var h = 0; h < config.startingPoints.length; h++) {
         var sp = config.startingPoints[h];
@@ -763,7 +627,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
             $option.html(label);
             jqObject.append($option);
           }
-        }      
+        }
       }
     }
 
@@ -780,14 +644,14 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
     getProfileOptions($loadibcform.find('#bfeditor-loadibc-dropdownMenu'));
 
     $loadibcdiv.append($loadibcform);
-            
+
     $loadibcdiv.find('#bfeditor-loadibcuri').click(function () {
       // var loadtemplates = [];
 
       var spid = $(this.parentElement).find('#bfeditor-loadibc-dropdownMenu').val();
-      
-      var spnums = spid.replace('sp-', '').split('_'); 
-      
+
+      var spnums = spid.replace('sp-', '').split('_');
+
       var spoints = editorconfig.startingPoints[spnums[0]].menuItems[spnums[1]];
 
       if ($('#bfeditor-messagediv').length) {
@@ -916,9 +780,9 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
             <div id="bfeditor-loadmarc-dropdown" class="dropdown"><select id="bfeditor-loadmarc-dropdownMenu" type="select" class="form-control">Select Profile</select></div></div> \
             <button id="bfeditor-loadmarc" type="button" class="btn btn-primary">Submit</button> \
             </form></div>'));
-    
+
     getProfileOptions($loadmarcdiv.find('#bfeditor-loadmarc-dropdownMenu'));
-    
+
     $loadmarcdiv.find('.dropdown-menu > li > a').click(function() {
       $('#marcdx').html($(this).text() + ' <span class="caret">');
     });
@@ -931,7 +795,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
       var url = 'http://lx2.loc.gov:210/LCDB?query=' + dx + '=' + term + '&recordSchema=bibframe2a&maximumRecords=1';
       $('#loadmarc-uri').attr('value', url);
     });
-    
+
     $tabcontentdiv.append($browsediv);
     $tabcontentdiv.append($creatediv);
     $tabcontentdiv.append($loaddiv);
@@ -943,7 +807,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
 
       if (this.id == 'bfeditor-loadmarc') {
         var spid = $(this.parentElement).find('#bfeditor-loadmarc-dropdownMenu').val();
-        var spnums = spid.replace('sp-', '').split('_'); 
+        var spnums = spid.replace('sp-', '').split('_');
         spoints = editorconfig.startingPoints[spnums[0]].menuItems[spnums[1]];
         bfeditor.bfestore.state = 'loadmarc';
       } else {
@@ -953,7 +817,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
         };
         bfeditor.bfestore.state = 'loaduri';
       }
- 
+
       bfeditor.bfestore.store = [];
       bfeditor.bfestore.name = guid();
       bfeditor.bfestore.created = new Date().toUTCString();
@@ -1540,7 +1404,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
         id: rt.useguid,
         'data-uri': rt.defaulturi
       }); // is data-uri used?
-      
+
       // create a popover box to display resource ID of the thing.
       var $resourcedivheading = $('<h4>' + rt.resourceLabel + ' </h4>');
       if (rt.defaulturi.match(/^http/)) {
@@ -1553,7 +1417,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
         $resourceInfo.popover({ trigger: "click hover" });
         $resourcedivheading.append($resourceInfo);
       }
-      
+
       // create an empty clone button
       var $clonebutton = $('<button type="button" class="pull-right btn btn-primary" data-toggle="modal" data-target="#clone-input"><span class="glyphicon glyphicon-duplicate"></span></button>');
 
@@ -1568,11 +1432,11 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
         $clonebutton.data({'match':'works','label':'Work'});
       }
 
-      // append to the resource heading if there is a clone button id and is not a modal window      
+      // append to the resource heading if there is a clone button id and is not a modal window
       if ($clonebutton.attr('id') && rt.embedType != 'modal') {
         var newid = mintResource(guid());
         $resourcedivheading.append($clonebutton);
-        
+
         // ask user to input custom id
         $cloneinput = $('\
           <div id="clone-input" class="modal" tabindex="-1" role="dialog">\
@@ -1631,16 +1495,16 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
         // start checking for errors (basically check for remnants of old resource IDs)
         var errs = 0;
         bfeditor.bfestore.store.forEach( function(trip) {
-          if (trip.s == olduri) {        
+          if (trip.s == olduri) {
              errs++;
           }
         });
         if (errs > 0) {
           $msgnode.append('<div class="alert alert-danger">Old ' + ctype + ' URIs found in cloned description. Clone failed!<button type="button" class="close" data-dismiss="alert"><span>&times; </span></button></div>');
-        } else {         
+        } else {
           $msgnode.append('<div class="alert alert-info">' + ctype + ' cloned as ' + rid + '<button type="button" class="close" data-dismiss="alert"><span>&times; </span></button></div>');
-        } 
-        $msgnode.insertBefore('.nav-tabs');   
+        }
+        $msgnode.insertBefore('.nav-tabs');
       });
 
       var $formgroup = $('<div>', {
@@ -1889,9 +1753,9 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
             $formgroup.append($input);
             $formgroup.append($button);
             // $formgroup.append($saves);
-          }       
+          }
         }
-        
+
         $resourcediv.append($formgroup);
         forEachFirst = false;
       });
@@ -1915,7 +1779,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
         $addpropinput = $('<input>', { id: 'addproperty', type: 'text', class: 'form-control', placeholder: 'Type for suggestions' });
         $addpropinput.appendTo($addpropdata).typeahead(
           {
-            highlight: true,        
+            highlight: true,
           },
           {
             name: 'resources',
@@ -1929,7 +1793,7 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
           newproperty.guid = guid();
           rt.propertyTemplates.push(newproperty);
           addedProperties.push(newproperty);
-          cbLoadTemplates(rt.propertyTemplates);       
+          cbLoadTemplates(rt.propertyTemplates);
         });
         $addproplabel = $('<label class="col-sm-3 control-label">Add Property</label>');
         $addprop = $('<div>', { class: 'form-group row' });
@@ -3749,13 +3613,13 @@ bfe.define('src/bfestore', ['require', 'exports', 'module'], function (require, 
               nnode.o = nnode.o.replace(/bibframe.example.org\/.+#(Work|Topic).*/, 'id.loc.gov/resources/works/c' + recid);
               nnode.o = nnode.o.replace(/bibframe.example.org\/.+#Instance.*/, 'id.loc.gov/resources/instances/c' + recid + '0001');
               nnode.o = nnode.o.replace(/bibframe.example.org\/.+#Item.*/, 'id.loc.gov/resources/items/c' + recid + '0001');
-            } 
+            }
             console.log(nnode);
           });
           callback(loadtemplates);
         });
       },
-      error: function(XMLHttpRequest, textStatus, errorThrown) { 
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
         bfelog.addMsg(new Error(), "ERROR", "FAILED to load external source: " + url);
         bfelog.addMsg(new Error(), "ERROR", "Request status: " + textStatus + "; Error msg: " + errorThrown);
       }
@@ -3808,7 +3672,7 @@ bfe.define('src/bfestore', ['require', 'exports', 'module'], function (require, 
             if (triple) {
                 turtlestore.addTriple(triple);
             } else {
-                turtlestore.addPrefixes(theprefixes);                
+                turtlestore.addPrefixes(theprefixes);
                 var turtleWriter = N3.Writer({
                     prefixes: {
                         bf: 'http://id.loc.gov/ontologies/bibframe/',
@@ -3822,7 +3686,7 @@ bfe.define('src/bfestore', ['require', 'exports', 'module'], function (require, 
                 });
                 turtleWriter.addTriples(turtlestore.getTriples(null, null, null));
                 //turtleWriter.addTriples(exports.n3store.getTriples(null, null, null));
-                turtleWriter.end(function(error, result) {                    
+                turtleWriter.end(function(error, result) {
                 var input = {};
                 input.n3 = result;
                 $.ajax({
@@ -3842,8 +3706,8 @@ bfe.define('src/bfestore', ['require', 'exports', 'module'], function (require, 
               });
             }
           });
-      });  
-    });  
+      });
+    });
   };
 
   exports.n32store = function (n3, graph, tempstore, callback) {
@@ -3989,7 +3853,7 @@ bfe.define('src/bfestore', ['require', 'exports', 'module'], function (require, 
           if (triple) {
               turtlestore.addTriple(triple);
           } else {
-              turtlestore.addPrefixes(theprefixes);                
+              turtlestore.addPrefixes(theprefixes);
               var turtleWriter = N3.Writer({
                   prefixes: {
                       bf: 'http://id.loc.gov/ontologies/bibframe/',
@@ -4480,7 +4344,7 @@ bfe.define('src/lookups/lcshared', ['require', 'exports', 'module'], function (r
             typeahead_source.push({
               uri: u,
               source: source,
-              value: t, 
+              value: t,
               display: d
             });
             break;
