@@ -4,18 +4,19 @@
   "keywords": [
     "bibframe",
     "editor",
-    "rdf"
+    "rdf",
+    "ld4p-sinopia"
   ],
   "version": "0.2.0",
-  "homepage": "http://github.com/lcnetdev/bfe",
+  "homepage": "http://github.com/ld4p/bfe",
   "engines": {
     "node": ">= 0.9.0"
   },
-  "author": "Kirk Hess <khes@loc.gov>",
+  "author": "Stanford DLSS Infrastructure Team",
   "main": "src/bfe",
   "repository": {
     "type": "git",
-    "url": "http://github.com/lcnetdev/bfe.git"
+    "url": "http://github.com/ld4p/bfe.git"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
@@ -40,6 +41,10 @@
     {
       "type": "MIT",
       "url": "http://opensource.org/licenses/MIT"
+    },
+    {
+      "type": "Apache 2",
+      "url": "http://opensource.org/licenses/Apache2"
     }
   ],
   "directories": {
