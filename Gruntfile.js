@@ -1,4 +1,6 @@
 module.exports = function (grunt) {
+  require('load-grunt-tasks')(grunt);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
@@ -40,12 +42,21 @@ module.exports = function (grunt) {
           'builds/bfe.min.css': ['builds/bfe.css']
         }
       }
+    },
+    eslint: {
+        target: ['src/*.js',
+                 '__tests__/*.js']
     }
+
   })
 
   grunt.loadNpmTasks('grunt-contrib-uglify')
   grunt.loadNpmTasks('grunt-contrib-cssmin')
   grunt.loadNpmTasks('grunt-contrib-concat')
 
-  grunt.registerTask('default', ['concat', 'uglify', 'cssmin'])
+  // This order builds crappy js code in builds, should move eslint tasks to
+  // run before concat
+  grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'eslint'])
+  grunt.registerTask('test', ['eslint'])
+
 }

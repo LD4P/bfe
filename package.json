@@ -29,6 +29,8 @@
     "grunt-contrib-concat": "~0.5.1",
     "grunt-contrib-cssmin": "~0.14.0",
     "grunt-contrib-uglify": "~0.5.0",
+    "grunt-eslint": "^21.0.0",
+    "load-grunt-tasks": "^4.0.0",
     "serve-static": "~1.10.0"
   },
   "bugs": {
