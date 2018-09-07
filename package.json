@@ -4,25 +4,37 @@
   "keywords": [
     "bibframe",
     "editor",
-    "rdf"
+    "rdf",
+    "ld4p-sinopia"
   ],
   "version": "0.2.0",
-  "homepage": "http://github.com/lcnetdev/bfe",
+  "homepage": "http://github.com/ld4p/bfe",
   "engines": {
     "node": ">= 0.9.0"
   },
-  "author": "Kirk Hess <khes@loc.gov>",
+  "author": "Stanford DLSS Infrastructure Team",
   "main": "src/bfe",
   "repository": {
     "type": "git",
-    "url": "http://github.com/lcnetdev/bfe.git"
+    "url": "http://github.com/ld4p/bfe.git"
   },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-contrib-uglify": "~0.5.0",
-    "grunt-contrib-cssmin": "~0.14.0",
-    "grunt-contrib-concat": "~0.5.1",
+    "ajv": "^6.5.3",
+    "eslint": "^5.5.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.22.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-standard": "^4.0.0",
     "express": "~4.13.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "~0.5.1",
+    "grunt-contrib-cssmin": "~0.14.0",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-eslint": "^21.0.0",
+    "load-grunt-tasks": "^4.0.0",
     "serve-static": "~1.10.0"
   },
   "bugs": {
@@ -32,6 +44,10 @@
     {
       "type": "MIT",
       "url": "http://opensource.org/licenses/MIT"
+    },
+    {
+      "type": "Apache 2",
+      "url": "http://opensource.org/licenses/Apache2"
     }
   ],
   "directories": {

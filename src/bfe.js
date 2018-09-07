@@ -3290,11 +3290,13 @@ bfe.define('src/bfe', ['require', 'exports', 'module', 'src/bfestore', 'src/bfel
     var getResource = function (subjecturi, property, selected, process) {
       return lcshared.getResource(subjecturi, property, selected, process);
     };
-    lu.load = {
-      scheme,
-      source,
-      getResource
-    };
+    lu.load = { schema: schema, 
+	        source: source, 
+	    	getResource: getResource };
+      
+    //  source,
+    //   getResource
+   // };
     return lu;
   }
 
