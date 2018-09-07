@@ -19,14 +19,16 @@
     "url": "http://github.com/ld4p/bfe.git"
   },
   "devDependencies": {
+    "ajv": "^6.5.3",
     "eslint": "^5.5.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.22.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.0",
     "eslint-plugin-standard": "^4.0.0",
     "express": "~4.13.0",
-    "grunt": "~0.4.5",
+    "grunt": "^0.4.5",
     "grunt-contrib-concat": "~0.5.1",
     "grunt-contrib-cssmin": "~0.14.0",
     "grunt-contrib-uglify": "~0.5.0",
