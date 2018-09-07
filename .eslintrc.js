@@ -2,7 +2,7 @@ const ERROR = 2;
 const WARN = 1;
 
 module.exports = {
-    extends: [ "eslint:recommended", "plugin:node/recommended"],
+    extends: [ "eslint:recommended", "plugin:node/recommended", "plugin:security/recommended"],
     overrides: [
       {
         files: "**/*.js",
@@ -10,7 +10,7 @@ module.exports = {
           jest: true
         },
         plugins: [
-          "jest"
+          "jest", "security"
         ],
         rules: {
           "jest/no-disabled-tests": "warn",
